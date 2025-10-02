@@ -2,21 +2,42 @@ package main
 
 import (
 	"fmt"
-	"log"
-
 	"github.com/Shashivarunreddy/Go_projects/todo_cli/tasks"
 )
 
 func main() {
 
-	tasksList, err := tasks.LoadTasks("data/tasks.csv")
+	filename := "tasks.csv"
+
+	// Add a new task
+	err := tasks.AddTask(filename, "Learn Go CLI project")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println("Error:", err)
+		return
 	}
 
-	fmt.Println("taskes loaded in csv")
-	for _, t := range tasksList {
-		fmt.Println(t.ID, t.Description, t.CreatedAt, t.Completed)
+	fmt.Println("Task added successfully!")
+
+	// Reload tasks to verify
+	allTasks, _ := tasks.LoadTasks(filename)
+	fmt.Println("All Tasks:", allTasks)
+
+	tasks.ListTasks(filename, true)
+
+	tasks.ListTasks(filename, false)
+	err1 := tasks.CompleteTask(filename, 4)
+	if err1 != nil {
+		fmt.Println("Error:", err1)
+	} else {
+		fmt.Println("Task marked as completed!")
+	}
+
+	// Delete a task
+	err2 := tasks.DeleteTask(filename, 5)
+	if err2 != nil {
+		fmt.Println("Error:", err2)
+	} else {
+		fmt.Println("Task deleted!")
 	}
 
 }
