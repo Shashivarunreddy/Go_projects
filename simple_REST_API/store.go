@@ -8,7 +8,4 @@ var (
 
 	userMu = sync.RWMutex{}
 	postMu = sync.RWMutex{}
-
-	nextUserID = 1
-	nextPostID = 1
 )

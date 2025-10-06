@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -98,7 +97,6 @@ func getPosts(w http.ResponseWriter, r *http.Request) {
 	for _, p := range posts {
 		postList = append(postList, p)
 	}
-	fmt.Println("form getposts")
 	json.NewEncoder(w).Encode(postList)
 }
 
@@ -115,7 +113,68 @@ func creatPosts(w http.ResponseWriter, r *http.Request) {
 	newPost.ID = newId
 
 	posts[newId] = newPost
-	fmt.Println("form creatPosts")
 	json.NewEncoder(w).Encode(newPost)
 
+}
+
+func getPostsByID(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	idStr := strings.TrimPrefix(r.URL.Path, "/posts/")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+
+	post, exists := posts[id]
+	if !exists {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+
+	}
+
+	json.NewEncoder(w).Encode(post)
+}
+
+func updatePost(w http.ResponseWriter, r *http.Request) {
+	idStr := strings.TrimPrefix(r.URL.Path, "/posts/")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+
+	var updatedPost Post
+	json.NewDecoder(r.Body).Decode(&updatedPost)
+
+	if _, exists := posts[id]; !exists {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+
+	}
+
+	updatedPost.ID = id
+	posts[id] = updatedPost // ✅ overwrite directly
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(updatedPost)
+}
+
+func deletePost(w http.ResponseWriter, r *http.Request) {
+	idStr := strings.TrimPrefix(r.URL.Path, "/posts/")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "Invalid ID", http.StatusBadRequest)
+		return
+	}
+
+	if _, exists := posts[id]; !exists {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	delete(posts, id) // ✅ remove from map
+	w.WriteHeader(http.StatusNoContent)
 }

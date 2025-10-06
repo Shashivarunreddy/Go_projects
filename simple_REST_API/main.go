@@ -38,5 +38,18 @@ func main() {
 		}
 	})
 
+	http.HandleFunc("/posts/", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case "GET":
+			getPostsByID(w, r)
+		case "PUT":
+			updatePost(w, r)
+		case "DELETE":
+			deletePost(w, r)
+		default:
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		}
+	})
+
 	http.ListenAndServe(":8080", nil)
 }
