@@ -29,5 +29,14 @@ func main() {
 		}
 	})
 
+	http.HandleFunc("/posts", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case "GET":
+			getPosts(w, r)
+		case "POST":
+			creatPosts(w, r)
+		}
+	})
+
 	http.ListenAndServe(":8080", nil)
 }

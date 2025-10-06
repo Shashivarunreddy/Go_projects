@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -16,7 +17,7 @@ func getUsers(w http.ResponseWriter, r *http.Request) {
 		userList = append(userList, u)
 	}
 
-	json.NewEncoder(w).Encode(userList) // returns array instead of map
+	json.NewEncoder(w).Encode(userList)
 }
 
 func createUser(w http.ResponseWriter, r *http.Request) {
@@ -88,4 +89,33 @@ func deleteUser(w http.ResponseWriter, r *http.Request) {
 
 	delete(users, id) // ✅ remove from map
 	w.WriteHeader(http.StatusNoContent)
+}
+
+func getPosts(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	postList := []Post{}
+	for _, p := range posts {
+		postList = append(postList, p)
+	}
+	fmt.Println("form getposts")
+	json.NewEncoder(w).Encode(postList)
+}
+
+func creatPosts(w http.ResponseWriter, r *http.Request) {
+	var newPost Post
+
+	err := json.NewDecoder(r.Body).Decode(&newPost)
+	if err != nil {
+		http.Error(w, "Invalid request body", http.StatusMethodNotAllowed)
+		return
+	}
+
+	newId := len(posts) + 1
+	newPost.ID = newId
+
+	posts[newId] = newPost
+	fmt.Println("form creatPosts")
+	json.NewEncoder(w).Encode(newPost)
+
 }
