@@ -1,22 +1,97 @@
-# 📝 Tasks CLI A simple command-line task manager built in Go, supporting add, list, complete, and delete operations. Tasks are stored in a local CSV file for persistence. ## 🚀 Features - Add tasks with a description - List tasks (pending only, or all with -a) - Mark tasks as complete - Delete tasks by ID - Stores tasks in a CSV file for easy portability - Friendly human-readable timestamps (e.g. "2 minutes ago") ## 🛠️ Built With - Go – programming language - Cobra – CLI framework - timediff – friendly time differences - CSV (encoding/csv) – lightweight task persistence ## Installation 1. Clone the Repository
-bash
+# 📝 Simple REST API in Go
+
+
+A beginner-friendly RESTful API built using Golang, supporting CRUD operations for Users and Posts. Data is stored in memory (maps), making it lightweight and easy to understand.
+
+## 🚀 Features
+
+- Manage Users : Create, Read (all & by ID), Update, Delete
+- Manage Posts : Create, Read (all & by ID), Update, Delete
+- JSON-based requests and responses
+- Delete tasks by ID
+- In-memory storage (no database required)
+
+
+## 🛠️ Built With
+
+- Go – programming language
+- net/http – HTTP server & routing
+- encoding/json – JSON encoding & decoding
+- In-memory store (map) – lightweight persistence
+## Installation
+
+
+1. Clone the Repository
+
+```bash
 git clone https://github.com/Shashivarunreddy/Go_projects.git
-cd Go_projects/todo_cli
+cd Go_projects/simple_REST_API
+```
+
 2. Install dependencies:
-bash
+
+```bash
 go mod tidy
-3. Build and install to your Go bin:
-bash
-go install .
-⚡ Ensure $HOME/go/bin is in your $PATH so you can run tasks globally. ## 🎯 Example Workflow
-bash
-tasks add "Buy groceries" // add tasks
-tasks add "Finish homework"
+```
+3. Build and install to your Go bin: 
 
-tasks list // list all the tasks
 
-tasks complete 1 // Marks task with id 1 as completed
-tasks list -a // lists all the incompleted tasks
+```bash
+go run .
 
-tasks delete 2 // Delete task with id 2
-tasks list -a
+```
+
+
+
+## 🎯 Example Workflow
+
+1.Users
+```bash
+# Create Users
+curl -X POST http://localhost:8080/users \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Alice","email":"alice@example.com"}'
+
+curl -X POST http://localhost:8080/users \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Bob","email":"bob@example.com"}'
+
+# Get All Users
+curl http://localhost:8080/users
+
+# Get User by ID
+curl http://localhost:8080/users/1
+
+# Update User
+curl -X PUT http://localhost:8080/users/1 \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Alice Updated","email":"alice@new.com"}'
+
+# Delete User
+curl -X DELETE http://localhost:8080/users/1
+
+
+```
+
+2.Posts
+```bash
+# Create Posts
+curl -X POST http://localhost:8080/posts \
+  -H "Content-Type: application/json" \
+  -d '{"title":"My First Post","content":"Hello World!"}'
+
+# Get All Posts
+curl http://localhost:8080/posts
+
+# Get Post by ID
+curl http://localhost:8080/posts/1
+
+# Update Post
+curl -X PUT http://localhost:8080/posts/1 \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Updated Title","content":"Updated Content"}'
+
+# Delete Post
+curl -X DELETE http://localhost:8080/posts/1
+
+```
